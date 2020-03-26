@@ -41,3 +41,62 @@ public:
         return ans;
     }
 };
+
+
+
+//a little faster solution using unordered map
+//O(n)- pep approach
+
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        int n=nums.size();
+        if(n==0) return 0;
+        
+        unordered_map<int,int> m;
+        int ans=1;
+        for(int i=0;i<n;i++)
+        {
+            if(!m[nums[i]]) //for duplicates
+            {
+                m[nums[i]]=1;
+            
+            if(m.find(nums[i]-1)!=m.end() && m.find(nums[i]+1)!=m.end())
+            {
+                int len_before=m[nums[i]-1];
+                int len_after=m[nums[i]+1];
+                
+                int start=nums[i]-len_before;
+                int end=nums[i]+len_after;
+                
+                m[start]=len_before+len_after+1;
+                m[end]=len_before+len_after+1;
+                
+                ans=max(ans,m[start]);
+            }
+            else if(m.find(nums[i]-1)!=m.end())
+            {
+                int len_before=m[nums[i]-1];
+                int start=nums[i]-len_before;
+                
+                m[start]=len_before+1;
+                m[nums[i]]=len_before+1;
+                
+                ans=max(ans,m[start]);
+            }
+            else if(m.find(nums[i]+1)!=m.end())
+            {
+                int len_after=m[nums[i]+1];
+                int end=nums[i]+len_after;
+                
+                m[end]=len_after+1;
+                m[nums[i]]=len_after+1;
+                
+                ans=max(ans,m[end]);
+            }
+            }
+        }
+        
+        return ans;
+    }
+};
